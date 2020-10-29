@@ -4,17 +4,29 @@ using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class player : MonoBehaviour
 {
     private Rigidbody2D rigidbody2D;
-    public float speed = 15f;
-    public float jump = 10f;
+    private Collider2D collider2D;
+    private SpriteRenderer sprite;
+    public Slider slider;
+    public saw saw;
+    public float speed = 10f;
+    public float jump = 5f;
+    private bool is_jump = true;
+    private bool is_second_jump = true;
+    public int HP = 3;
+
 
     // Start is called before the first frame update
     void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        collider2D = GetComponent<Collider2D>();
+        sprite = GetComponent<SpriteRenderer>();
+        slider = GameObject.Find("HPbar").GetComponent<Slider>();
     }
 
     // Update is called once per frame
@@ -25,14 +37,57 @@ public class player : MonoBehaviour
 
         // "Horizontal"設定されているボタンが押されたら向きに応じて-1～1を返すそうでなければ0を返す．
         // deltaTimeは1つ前のフレームから現在のフレームに更新するまでにかかった時間．これによりフレームレートによって移動速度が変わるのを防ぐ．
-        pos.x += Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        var axis = Input.GetAxis("Horizontal");
+        pos.x += axis * speed * Time.deltaTime;
+
+        // 左に移動する時はレンダリング画像を反転させる．
+        if (axis < 0)
+        {
+            sprite.flipX = true;
+        }
+        else
+        {
+            sprite.flipX = false;
+        }
 
         // 最後に変更したposで自分の位置を更新．
         transform.position = pos;
 
-        if (Input.GetAxisRaw("Jump").Equals(1))
+        if (Input.GetButtonDown("Jump") && !is_jump)
         {
-            rigidbody2D.AddForce(new Vector2(0, jump));
+            var v = rigidbody2D.velocity;
+            v.y += jump;
+            rigidbody2D.velocity = v;
+            is_jump = true;
+        }
+        else if (Input.GetButtonDown("Jump") && is_jump && !is_second_jump)
+        {
+            var v = rigidbody2D.velocity;
+            v.y += jump;
+            rigidbody2D.velocity = v;
+            is_second_jump = true;
+        }
+
+        slider.value = HP;
+
+        if (Input.GetButtonDown("Attack"))
+        {
+            GameObject.Instantiate(saw.gameObject, transform.position, transform.rotation);
+        }
+    }
+
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "floor")
+        {
+            is_jump = false;
+            is_second_jump = false;
+        }
+
+        if (collision.gameObject.tag == "enemy")
+        {
+            HP -= 1;
         }
     }
 
