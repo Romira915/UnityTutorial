@@ -7,11 +7,12 @@ public class saw : MonoBehaviour
 {
     public float speed = 3f;
     public int attack = 1;
+    private Renderer renderer;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        renderer = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -20,12 +21,10 @@ public class saw : MonoBehaviour
         var pos = transform.position;
         pos.x += speed * Time.deltaTime;
         transform.position = pos;
-    }
 
-    bool is_onScreen()
-    {
-        Screen.
-
-        return true;
+        if (!renderer.isVisible)
+        {
+            Destroy(gameObject);
+        }
     }
 }
