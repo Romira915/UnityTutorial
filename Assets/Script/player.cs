@@ -12,6 +12,7 @@ public class player : MonoBehaviour
     private Collider2D collider2D;
     private SpriteRenderer sprite;
     public Slider slider;
+    private Animator animator;
     public saw saw;
     public float speed = 10f;
     public float jump = 5f;
@@ -27,6 +28,7 @@ public class player : MonoBehaviour
         collider2D = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
         slider = GameObject.Find("HPbar").GetComponent<Slider>(); // HPbarのコンポーネントを取得する
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -60,6 +62,7 @@ public class player : MonoBehaviour
             v.y += jump; // 「ジャンプ力」だけ速度を加える
             rigidbody2D.velocity = v; // 変更したvをvelocityに代入する
             is_jump = true; // ジャンプ中にする
+            animator.SetBool("Jump", true);
         }
         else if (Input.GetButtonDown("Jump") && !is_second_jump) // 二段ジャンプ用
         {
@@ -67,6 +70,7 @@ public class player : MonoBehaviour
             v.y += jump;
             rigidbody2D.velocity = v;
             is_second_jump = true;
+            animator.SetBool("Double Jump", true);
         }
 
         slider.value = HP;
@@ -85,6 +89,8 @@ public class player : MonoBehaviour
         {
             is_jump = false;
             is_second_jump = false;
+            animator.SetBool("Jump", false);
+            animator.SetBool("Double Jump", false);
         }
 
         // 敵に当たった時
