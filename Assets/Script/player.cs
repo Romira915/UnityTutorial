@@ -26,7 +26,7 @@ public class player : MonoBehaviour
         rigidbody2D = GetComponent<Rigidbody2D>();
         collider2D = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
-        slider = GameObject.Find("HPbar").GetComponent<Slider>();
+        slider = GameObject.Find("HPbar").GetComponent<Slider>(); // HPbarのコンポーネントを取得する
     }
 
     // Update is called once per frame
@@ -53,14 +53,15 @@ public class player : MonoBehaviour
         // 最後に変更したposで自分の位置を更新．
         transform.position = pos;
 
+        // ジャンプに指定したボタンが押下された時 かつ ジャンプ中ではない時
         if (Input.GetButtonDown("Jump") && !is_jump)
         {
-            var v = rigidbody2D.velocity;
-            v.y += jump;
-            rigidbody2D.velocity = v;
-            is_jump = true;
+            var v = rigidbody2D.velocity; // velocityを一時変数を格納
+            v.y += jump; // 「ジャンプ力」だけ速度を加える
+            rigidbody2D.velocity = v; // 変更したvをvelocityに代入する
+            is_jump = true; // ジャンプ中にする
         }
-        else if (Input.GetButtonDown("Jump") && is_jump && !is_second_jump)
+        else if (Input.GetButtonDown("Jump") && !is_second_jump) // 二段ジャンプ用
         {
             var v = rigidbody2D.velocity;
             v.y += jump;
@@ -79,12 +80,14 @@ public class player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // 着地した時
         if (collision.gameObject.tag == "floor")
         {
             is_jump = false;
             is_second_jump = false;
         }
 
+        // 敵に当たった時
         if (collision.gameObject.tag == "enemy")
         {
             HP -= 1;

@@ -18,8 +18,14 @@ public class enemy : MonoBehaviour
     void Update()
     {
         Move();
+
+        if (!sprite.isVisible)
+        {
+            Destroy(gameObject);
+        }
     }
 
+    // 自分を動かす
     void Move()
     {
         sprite.flipX = true;
@@ -30,6 +36,7 @@ public class enemy : MonoBehaviour
         transform.position = pos;
     }
 
+    // ダメージを受ける
     void Damage(int attack)
     {
         HP -= attack;
@@ -40,10 +47,11 @@ public class enemy : MonoBehaviour
         }
     }
 
+    // 画像を点滅させる
     IEnumerator Flashing()
     {
         var color = sprite.color;
-        for (int i = 0;i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             color.a = 0;
             sprite.color = color;
@@ -56,6 +64,7 @@ public class enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
+        // sawに当たった時
         if (collider.gameObject.tag == "saw")
         {
             var saw = collider.gameObject.GetComponent<saw>();

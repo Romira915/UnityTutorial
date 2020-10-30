@@ -7,12 +7,12 @@ public class saw : MonoBehaviour
 {
     public float speed = 3f;
     public int attack = 1;
-    private Renderer renderer;
+    private SpriteRenderer renderer;
 
     // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<Renderer>();
+        renderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
