@@ -8,6 +8,8 @@ public class enemy : MonoBehaviour
     [SerializeField] private float speed = 1f;
     private int HP = 3;
 
+    private const short FLASH_NUM = 2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,7 +53,7 @@ public class enemy : MonoBehaviour
     IEnumerator Flashing()
     {
         var color = sprite.color;
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < enemy.FLASH_NUM * 2; i++)
         {
             color.a = (color.a + 1) % 2;
             sprite.color = color;
