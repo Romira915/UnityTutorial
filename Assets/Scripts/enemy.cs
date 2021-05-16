@@ -51,12 +51,9 @@ public class enemy : MonoBehaviour
     IEnumerator Flashing()
     {
         var color = sprite.color;
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 4; i++)
         {
-            color.a = 0;
-            sprite.color = color;
-            yield return new WaitForSeconds(0.1f);
-            color.a = 255;
+            color.a = (color.a + 1) % 2;
             sprite.color = color;
             yield return new WaitForSeconds(0.1f);
         }
